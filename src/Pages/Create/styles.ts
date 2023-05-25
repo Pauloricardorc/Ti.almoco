@@ -18,8 +18,7 @@ export const Container = styled.ScrollView`
   gap: 12px;
   border-top-left-radius: 32px;
   border-top-right-radius: 32px;
-  padding: 24px;
-  gap: 12px;
+  padding: 42px 24px;
 `
 
 export const Title = styled.Text`
@@ -27,46 +26,32 @@ export const Title = styled.Text`
  font-weight: 500;
  align-self: center;
 `
-
-export const HeaderAvatar = styled.View`
-  flex-direction: row;
+export const ButtonCustom = styled.TouchableOpacity`
+  width: 100%;
+  height: 50px;
+  background-color: #333;
   align-items: center;
   justify-content: center;
-  padding: 12px 0;
-  gap: 24px;
-  overflow: hidden;
+  margin-top: 24px;
+  border-radius: 12px;
 `
-export const ContainerAvatar = styled.View`
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  flex: 1;
-`
-
-export const Avatar = styled.View`
-  align-items: center;
-  width: auto;
-  padding: 0;
-  gap: 12px;
-`
-
-export const ContainerDescription = styled.View`
-  gap: 12px;
-  align-items: center;
-`
-export const TitleDescription = styled.Text`
+export const TextCustom = styled.Text`
   font-size: 18px;
-  color: #212A3E;
-  font-weight: 700;
+  color: #F0F0F0;
 `
-export const Date = styled.Text`
-   font-size: 14px;
-  color: #526D82;
-  font-weight: 300;
+
+export const DateAndroid = styled.TouchableOpacity`
+  width: 100%;
+  height: auto;
+  background: #202020;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  padding: 14px 0;
 `
-export const Price = styled.Text`
-    font-size: 18px;
-  color: #E74646;
-  font-weight: 400;
+    
+export const DateLabel = styled.Text`
+  color: #F0F0F0;
+  font-size: 16px;
+  text-transform: capitalize;
 `

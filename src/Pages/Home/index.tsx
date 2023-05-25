@@ -1,12 +1,17 @@
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { StatusBar } from "expo-status-bar";
 import { PencilSimpleLine, Plus, Trash } from "phosphor-react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Image, TouchableOpacity } from "react-native";
+import { FormatNewDate } from "../../hooks/formatDate";
+import { FormatPrice } from "../../hooks/formatPrice";
+import { Register } from "../Api/Register/axios";
 import Pesquisa from "./components/pesquisa/Pesquisa";
 import {
   CardActions,
   CardGastos,
   CardItem,
-  Container,
   ContainerItem,
   ContainerItems,
   ContainerLine,
@@ -23,6 +28,7 @@ import {
   Line3,
   PriceItem,
   SearchIcon,
+  StatusBarBackground,
   SubTitleCardGastos,
   SubTitleItem,
   TextContainer,
@@ -31,62 +37,34 @@ import {
   TitleItem,
 } from "./styles";
 
+type IRegister = {
+  id: string;
+  comprador: string;
+  convidado: string;
+  data: string;
+  descricao: string;
+  preco: number;
+};
+
 export default function Home({ navigation }: any) {
+  const [pesquisa, setPesquisa] = useState("");
   const [actionActive, setActionActive] = useState(false);
-  const ITEMS = [
-    {
-      id: 1,
-      title: "Marmitex",
-      subTitle: "21 - Maio - 2023",
-      price: "12,25",
-    },
-    {
-      id: 2,
-      title: "Churrasco",
-      subTitle: "22 - Maio - 2023",
-      price: "24,00",
-    },
-    {
-      id: 3,
-      title: "Marmitex",
-      subTitle: "23 - Maio - 2023",
-      price: "8,00",
-    },
-    {
-      id: 4,
-      title: "Marmitex",
-      subTitle: "23 - Maio - 2023",
-      price: "8,00",
-    },
-    {
-      id: 5,
-      title: "Marmitex",
-      subTitle: "23 - Maio - 2023",
-      price: "8,00",
-    },
-    {
-      id: 6,
-      title: "Marmitex",
-      subTitle: "23 - Maio - 2023",
-      price: "8,00",
-    },
-    {
-      id: 7,
-      title: "Marmitex",
-      subTitle: "23 - Maio - 2023",
-      price: "8,00",
-    },
-    {
-      id: 8,
-      title: "Marmitex",
-      subTitle: "23 - Maio - 2023",
-      price: "8,00",
-    },
-  ];
+  const [ITEMS, setItems] = useState<IRegister[]>([]);
+  const newDate = new Date();
+
+  useEffect(() => {
+    async function getAllRegister() {
+      await Register.get("listagem").then((e) => setItems(e.data));
+    }
+    getAllRegister();
+  }, []);
 
   return (
-    <Container>
-      <Title>21, Maio, 2023</Title>
+    <StatusBarBackground>
+      <StatusBar style="light" translucent />
+      <Title style={{ textTransform: "capitalize" }}>
+        {format(new Date(newDate), "dd, MMM, yyyy", { locale: ptBR })}
+      </Title>
       <CardGastos>
         <DollarIcon size={42} color="#537188" />
         <TextContainer>
@@ -100,43 +78,63 @@ export default function Home({ navigation }: any) {
         </ContainerLine>
       </CardGastos>
       <ContainerPesquisa>
-        <Pesquisa placeholder="Pesquisar por registro" />
+        <Pesquisa
+          placeholder="Pesquisar por registro"
+          onChangeText={(value) => setPesquisa(value)}
+        />
         <SearchIcon size={24} color="#7D7D7D" />
       </ContainerPesquisa>
       <ContainerItems>
         <Header>
           <HeaderTitle>Lista de almoço</HeaderTitle>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("Cadastro")}>
             <Plus size={24} color="#212A3E" weight="bold" />
           </TouchableOpacity>
         </Header>
         <Items>
-          {ITEMS.map((item) => (
-            <CardItem
-              key={item.id}
-              onPress={() => navigation.navigate("Detail")}
-              onLongPress={() => setActionActive(!actionActive)}
-            >
-              <GroupLeftItem>
-                <Image source={require("../../Images/foodIcon.png")} />
-                <ContainerItem>
-                  <TitleItem>{item.title}</TitleItem>
-                  <SubTitleItem>{item.subTitle}</SubTitleItem>
-                </ContainerItem>
-              </GroupLeftItem>
-              <PriceItem>R$ {item.price}</PriceItem>
-              <CardActions style={{ display: actionActive ? "flex" : "none" }}>
-                <Delete>
-                  <Trash color="#F1F6F9" />
-                </Delete>
-                <Edit>
-                  <PencilSimpleLine color="#F1F6F9" />
-                </Edit>
-              </CardActions>
-            </CardItem>
-          ))}
+          {ITEMS
+            ? ITEMS.filter((desc) => desc.descricao.includes(pesquisa)).map(
+                (item: IRegister) => (
+                  <CardItem
+                    key={item.id}
+                    onPress={() =>
+                      navigation.navigate("Detail", {
+                        id: item.id,
+                        descricao: item.descricao,
+                        comprador: item.comprador,
+                        convidado: item.convidado,
+                        preco: item.preco,
+                        data: item.data,
+                      })
+                    }
+                    onLongPress={() => setActionActive(!actionActive)}
+                  >
+                    <GroupLeftItem>
+                      <Image source={require("../../Images/foodIcon.png")} />
+                      <ContainerItem>
+                        <TitleItem>{item.descricao}</TitleItem>
+                        <SubTitleItem>
+                          {item.data ?? FormatNewDate(item.data)}
+                        </SubTitleItem>
+                      </ContainerItem>
+                    </GroupLeftItem>
+                    <PriceItem>{FormatPrice(item.preco)}</PriceItem>
+                    <CardActions
+                      style={{ display: actionActive ? "flex" : "none" }}
+                    >
+                      <Delete>
+                        <Trash color="#F1F6F9" />
+                      </Delete>
+                      <Edit>
+                        <PencilSimpleLine color="#F1F6F9" />
+                      </Edit>
+                    </CardActions>
+                  </CardItem>
+                )
+              )
+            : ""}
         </Items>
       </ContainerItems>
-    </Container>
+    </StatusBarBackground>
   );
 }

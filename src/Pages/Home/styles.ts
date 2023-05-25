@@ -1,6 +1,17 @@
+import Constants from 'expo-constants';
 import { CurrencyCircleDollar, MagnifyingGlass } from "phosphor-react-native";
-
+import { Platform } from "react-native";
 import styled from 'styled-components/native';
+
+const headerHeight = 48
+
+export const StatusBarBackground = styled.View`
+  flex: 1;
+  gap: 24px;
+  background: #141316;
+  padding-top: ${Platform.OS === 'ios' ? Constants.statusBarHeight : 0}px;
+  height: ${Platform.OS === 'ios' ? Constants.statusBarHeight + headerHeight : headerHeight}px;
+`
 
 export const Container = styled.SafeAreaView`
   flex: 1;
@@ -84,6 +95,7 @@ export const SearchIcon = styled(MagnifyingGlass)`
 
 export const ContainerItems = styled.View`
   flex: 1;
+  height: auto;
   background-color: #F1F6F9;
   gap: 12px;
   border-top-left-radius: 32px;

@@ -1,6 +1,8 @@
 import { StatusBar } from "expo-status-bar";
 import { Image, Text } from "react-native";
 import Header from "../../Layouts/Header";
+import { FormatNewDate } from "../../hooks/formatDate";
+import { FormatPrice } from "../../hooks/formatPrice";
 import {
   Avatar,
   Container,
@@ -14,25 +16,27 @@ import {
   TitleDescription,
 } from "./styles";
 
-export default function Details() {
+export default function Details({ route, navigation }: any) {
+  const { id, descricao, comprador, convidado, preco, data } = route.params;
+
   return (
     <StatusBarBackground>
-      <StatusBar style="light" backgroundColor="#141316" />
-      <Header title="Detalhes do almoço   " />
+      <StatusBar style="light" translucent />
+      <Header navigation={navigation} title="Detalhes do almoço" />
       <Image source={require("../../Images/background.png")} />
-      <Container>
+      <Container key={id}>
         <Title>Detalhes</Title>
         <HeaderAvatar>
           <ContainerAvatar>
             <Avatar>
               <Image source={require("../../Images/user1.png")} />
-              <Text>Carol</Text>
+              <Text>{comprador}</Text>
             </Avatar>
           </ContainerAvatar>
           <ContainerAvatar>
             <Avatar>
               <Image source={require("../../Images/user2.png")} />
-              <Text>Carol</Text>
+              <Text>{convidado}</Text>
             </Avatar>
           </ContainerAvatar>
         </HeaderAvatar>
@@ -41,9 +45,9 @@ export default function Details() {
             style={{ width: 68, height: 68 }}
             source={require("../../Images/foodLarge.png")}
           />
-          <TitleDescription>Marmitex</TitleDescription>
-          <Date>21 - Maio - 2023</Date>
-          <Price>R$ 12,25</Price>
+          <TitleDescription>{descricao}</TitleDescription>
+          <Date>{data ?? FormatNewDate(data)}</Date>
+          <Price>{FormatPrice(preco)}</Price>
         </ContainerDescription>
       </Container>
     </StatusBarBackground>
