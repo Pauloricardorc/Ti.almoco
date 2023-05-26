@@ -114,7 +114,7 @@ export default function Home({ navigation }: any) {
                       <ContainerItem>
                         <TitleItem>{item.descricao}</TitleItem>
                         <SubTitleItem>
-                          {item.data ?? FormatNewDate(item.data)}
+                          {item.data}
                         </SubTitleItem>
                       </ContainerItem>
                     </GroupLeftItem>

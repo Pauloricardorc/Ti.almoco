@@ -46,7 +46,7 @@ export default function Details({ route, navigation }: any) {
             source={require("../../Images/foodLarge.png")}
           />
           <TitleDescription>{descricao}</TitleDescription>
-          <Date>{data ?? FormatNewDate(data)}</Date>
+          <Date>{data}</Date>
           <Price>{FormatPrice(preco)}</Price>
         </ContainerDescription>
       </Container>

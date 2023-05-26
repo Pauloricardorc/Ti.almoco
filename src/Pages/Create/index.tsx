@@ -55,19 +55,12 @@ export function CreateNewRegister({ navigation }: any) {
 
   async function handleForm(data: IRegister) {
     const { descricao, comprador, convidado, preco } = data;
-    console.log({
-      descricao,
-      comprador: "Paulo",
-      convidado,
-      preco,
-      data: new Date(date).toISOString(),
-    });
     await Register.post("criar", {
       descricao,
       comprador: "Paulo",
       convidado,
       preco: Number(preco),
-      data: new Date(date).toISOString(),
+      data: FormatNewDate(date),
     }).then(() => alert("Adicionado"));
   }
 
