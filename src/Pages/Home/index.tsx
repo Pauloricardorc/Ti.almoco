@@ -1,9 +1,9 @@
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { StatusBar } from "expo-status-bar";
-import { PencilSimpleLine, Plus, Trash } from "phosphor-react-native";
-import { useEffect, useState } from "react";
-import { Image, TouchableOpacity } from "react-native";
+import { AlignBottom, CircleNotch, PencilSimpleLine, Plus, Trash } from "phosphor-react-native";
+import { useCallback, useEffect, useState } from "react";
+import { Image, TouchableOpacity, View } from "react-native";
 import { FormatNewDate } from "../../hooks/formatDate";
 import { FormatPrice } from "../../hooks/formatPrice";
 import { Register } from "../Api/Register/axios";
@@ -52,11 +52,12 @@ export default function Home({ navigation }: any) {
   const [ITEMS, setItems] = useState<IRegister[]>([]);
   const newDate = new Date();
 
-  useEffect(() => {
-    async function getAllRegister() {
+  const newsListRegister = useCallback(async () => {
       await Register.get("listagem").then((e) => setItems(e.data));
-    }
-    getAllRegister();
+  }, [])
+
+  useEffect(() => {
+    newsListRegister()
   }, []);
 
   return (
@@ -87,9 +88,14 @@ export default function Home({ navigation }: any) {
       <ContainerItems>
         <Header>
           <HeaderTitle>Lista de almoço</HeaderTitle>
+          <View style={{flexDirection: 'row', alignItems: 'center', gap: '24px', justifyContent: 'center'}}>
           <TouchableOpacity onPress={() => navigation.navigate("Cadastro")}>
             <Plus size={24} color="#212A3E" weight="bold" />
           </TouchableOpacity>
+          <TouchableOpacity onPress={newsListRegister}>
+          <CircleNotch size={32} color="#212A3E" />
+          </TouchableOpacity>
+          </View>
         </Header>
         <Items>
           {ITEMS
